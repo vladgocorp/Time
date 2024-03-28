@@ -174,7 +174,7 @@
 
   h1 {
     margin-right: 50%;
-    margin-top: 10px;
+    margin-top: 200px;
     margin-bottom: -80px;
   }
 
