@@ -1,7 +1,5 @@
 <script>
   import { onMount } from "svelte";
-  import { tweened } from "svelte/motion";
-  import { cubicOut } from "svelte/easing";
   let time = new Date();
 
   $: hours = time.getHours();
@@ -18,14 +16,11 @@
     };
   });
 
-  const progress = tweened(0, {
-    duration: 400,
-    easing: cubicOut,
-  });
+  let progressValue = 0;
 
   import { createEventDispatcher } from "svelte";
 
-  let progres = 0;
+  let watchProgress = 0;
   let showModal = false;
   let modalMessage = "";
   let modalButton = "";
@@ -43,19 +38,19 @@
   }
 
   $: modalButton =
-    progres === 0.5
+    watchProgress === 0.5
       ? "Accept"
-      : progres === 0.75
+      : watchProgress === 0.75
         ? "Yes"
-        : progres === 1
+        : watchProgress === 1
           ? "Love u"
           : "";
   $: modalMessage =
-    progres === 0.5
+    watchProgress === 0.5
       ? "mehh"
-      : progres === 0.75
+      : watchProgress === 0.75
         ? "I have to improve"
-        : progres === 1
+        : watchProgress === 1
           ? "Thanks"
           : "";
 
@@ -63,7 +58,7 @@
    * @param {number} value
    */
   function updateProgress(value) {
-    progres = value;
+    progressValue = value;
     showModal = true;
   }
 </script>
@@ -108,27 +103,28 @@
 
   <div style="position: relative;">
     <h1>How much do you like the Watch?</h1>
-    <progress value={$progress} />
+
+    <progress value={progressValue} max="1"></progress>
 
     {#if showModal}
       <div class="modal">
         <div class="modal-content">
-          {#if progres === 0}
+          {#if progressValue === 0}
             <p>Do you want to see it in a way that you do understand?</p>
             <button on:click={handleYes}>Sí</button>
             <button on:click={handleNo}>No</button>
-          {:else if progres === 0.25}
+          {:else if progressValue === 0.25}
             <p>Do you want to see it digitally?</p>
             <button on:click={handleYes}>Sí</button>
             <button on:click={handleNo}>No</button>
-          {:else if progres === 0.5}
+          {:else if progressValue === 0.5}
             <p>mehh</p>
             <button on:click={handleYes}>Accept</button>
-          {:else if progres === 0.75}
+          {:else if progressValue === 0.75}
             <p>I have to improve</p>
             <button on:click={handleYes}>Sí</button>
             <button on:click={handleNo}>No</button>
-          {:else if progres === 1}
+          {:else if progressValue === 1}
             <p>Thanks</p>
             <button on:click={handleYes}>Love u</button>
           {/if}
